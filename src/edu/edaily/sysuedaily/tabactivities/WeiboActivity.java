@@ -101,10 +101,38 @@ public class WeiboActivity extends Activity {
 		public void onComplete(Bundle values) {
 			access_token = values.getString("access_token");
 			expires_in = values.getString("expires_in");
-			prefs.edit().putString("access_token", access_token).putString("expires_in", expires_in).commit();
+			prefs.edit().putString("access_token", access_token)
+				.putString("expires_in", expires_in)
+				.commit();
 			AccessToken accessToken = new AccessToken(access_token, Constant.CONSUMER_SECRET);
 			accessToken.setExpiresIn(expires_in);
 			Weibo.getInstance().setAccessToken(accessToken);
+			
+			String url1 = Weibo.SERVER + "users/show.json";
+			String url2 = Weibo.SERVER + "account/get_uid.json";
+			String rlt;
+			try {
+				WeiboParameters bundle = new WeiboParameters();
+				bundle.add("source", Weibo.getAppKey());
+				rlt = weibo.request(WeiboActivity.this, url2, bundle, "GET", weibo.getAccessToken());
+				JSONObject xy = new JSONObject(rlt);
+				String uid = xy.getString("uid");
+				WeiboParameters bundle2 = new WeiboParameters();
+				bundle2.add("source", Weibo.getAppKey());
+				bundle2.add("uid", uid);
+				rlt = weibo.request(WeiboActivity.this, url1, bundle2, "GET", weibo.getAccessToken());
+				JSONObject ret = new JSONObject(rlt);
+				String user_name = ret.getString("screen_name");
+				prefs.edit().putString("user_name", user_name).commit();
+				
+				refreshList();
+			} catch (WeiboException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 		}
 

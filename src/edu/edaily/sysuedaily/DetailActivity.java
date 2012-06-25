@@ -6,6 +6,8 @@ import java.io.IOException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -19,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import edu.edaily.sysuedaily.utils.Constant;
+import edu.edaily.sysuedaily.utils.NewsDBHelper;
 
 public class DetailActivity extends Activity {
 	
@@ -26,8 +29,13 @@ public class DetailActivity extends Activity {
 	TextView kind, title, date, text;
 	EditText comment;
 	ImageView pic;
+	String table_name;
+	long id;
 	
 	long gid;
+	
+	Cursor cursor;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,8 +52,18 @@ public class DetailActivity extends Activity {
 		Intent intent = getIntent();
 		kind.setText(intent.getStringExtra(Constant.NEWS_KIND));
 		title.setText(intent.getStringExtra(Constant.NEWS_TITLE));
-		text.setText(intent.getStringExtra(Constant.NEWS_TEXT));
 		gid = intent.getLongExtra(Constant.NEWS_GID, 0);
+		table_name = intent.getStringExtra(Constant.NEWS_TABLE);
+		id = intent.getLongExtra(Constant.NEWS_ID, 0);
+		
+		SQLiteDatabase db = new NewsDBHelper(this).getReadableDatabase();
+		cursor = db.query(table_name, new String[] {NewsDBHelper.C_ID, NewsDBHelper.C_TEXT, NewsDBHelper.C_PIC}, 
+				NewsDBHelper.C_GLOBAL_ID + "=" + gid, null, null, null, null);
+		
+		cursor.moveToFirst();
+		db.close();
+		
+		text.setText(cursor.getString(cursor.getColumnIndex(NewsDBHelper.C_TEXT)));
 		
 		back.setOnClickListener(new OnClickListener() {
 

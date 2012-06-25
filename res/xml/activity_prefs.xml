@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <PreferenceCategory android:title="UserProfile">
-        <Preference android:key="prefs_user_weibo_profile" android:title="未绑定微博">
-            <intent
-                android:action="android.intent.action.MAIN"
-                android:targetPackage="edu.edaily.sysuedaily"
-                android:targetClass="edu.edaily.sysuedaily.MainActivity"/>
-        </Preference>
+        <ListPreference android:key="prefs_user_weibo_profile" android:title="未绑定微博">
+        </ListPreference>
             
     </PreferenceCategory>
     

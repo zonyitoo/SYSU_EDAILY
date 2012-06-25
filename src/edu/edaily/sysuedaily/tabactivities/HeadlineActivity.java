@@ -48,11 +48,18 @@ public class HeadlineActivity extends Activity {
 	
 	ArrayList<HashMap<String, Object>> headcontent;
 	
-	String[] testArray = {"图书馆：什么样的饮品可以带？",
+	String[] testArray = {"今日岭南学院教育改革会召开",
 			"2月29日系“女性表白日” 男性拒绝需付出代价",
 			"AV女优进课堂 合适否？",
 			"谷歌社交网站GOOGLE+难以提高用户活跃度",
 			"珠海宝镜湾岩画中的巫舞"};
+	String[] textArray = {"        6月19日下午，岭南学院本科教育改革动员大会在岭南MBA中心大楼召开。" +
+			"我校校长许宁生、校长助理李文军，岭南学院院长徐信忠、书记张文彪，以及岭南学院全体教职员工、各项目主任、近40名学生代表参加了此次大会。" +
+			"\n        主管本科教学的陆军副院长介绍了岭南学院本科教育改革方案，详细阐述了改革的原因、理念及岭南学院本科项目教育目标，" +
+			"介绍了通过博雅教育与专业教育的整合、多维的教学评估和外部考官制度内外相结合的质量保障体系、学生指导方案、海外实习与社会实践等翔实的举措，" +
+			"培养适应社会需要的卓越人才。陆军副院长说，在本次本科教育改革的酝酿、思考、讨论和形成的改革方案过程中，学院始终牢记本科教育的核心——学生，" +
+			"学生的未来必将影响社会乃至人类的未来。正因为如此，教育改革必须极其慎重，必须是渐进、分阶段的，要实现改革目标还需要全体教师长期、" +
+			"艰辛的努力和无私奉献，我们会以谦卑的心态不断学习、思考、改进。", "", "", "", ""};
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,10 +73,10 @@ public class HeadlineActivity extends Activity {
 		values.put(NewsDBHelper.C_SPIC, "");
 		values.put(NewsDBHelper.C_DATE, new Date().toString());
 		values.put(NewsDBHelper.C_SHORT_DESCRIPTION, "DESCRIPTION");
-		values.put(NewsDBHelper.C_TEXT, "");
 		for (int i = 0; i < 3; ++ i) {
 			values.put(NewsDBHelper.C_GLOBAL_ID, i);
 			values.put(NewsDBHelper.C_TITLE, testArray[i]);
+			values.put(NewsDBHelper.C_TEXT, textArray[i]);
 			newsdb.insertOrThrow(NewsDBHelper.T_HEADLINE, null, values);
 		}
 		newsdb.close();
@@ -112,7 +119,6 @@ public class HeadlineActivity extends Activity {
 				intent.putExtra(Constant.NEWS_ID, cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID)));
 				intent.putExtra(Constant.NEWS_GID, cursor.getLong(cursor.getColumnIndexOrThrow(NewsDBHelper.C_GLOBAL_ID)));
 				intent.putExtra(Constant.NEWS_TITLE, cursor.getString(cursor.getColumnIndexOrThrow(NewsDBHelper.C_TITLE)));
-				intent.putExtra(Constant.NEWS_TEXT, cursor.getString(cursor.getColumnIndexOrThrow(NewsDBHelper.C_SHORT_DESCRIPTION)));
 				startActivity(intent);
 			}
 			
