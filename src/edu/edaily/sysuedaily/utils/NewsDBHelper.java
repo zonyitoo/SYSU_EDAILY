@@ -15,7 +15,6 @@ public class NewsDBHelper extends SQLiteOpenHelper {
 	public static final String T_LECTURE = "lecture_table";
 	public static final String T_JOB = "job_table";
 	public static final String T_VISION = "vision_table";
-	public static final String T_NEWS = "news_db";
 	
 	public static final String C_ID = BaseColumns._ID;
 	public static final String C_TITLE = "title";
@@ -34,7 +33,21 @@ public class NewsDBHelper extends SQLiteOpenHelper {
 	public static final String C_CONTENT = "content";
 	public static final String C_RATE = "rate";
 	
-	public static final String CREATE_NEWS_DB = "CREATE TABLE " + T_NEWS;
+	private static final String CREATE_NEWS_COLUMNS = " ("
+			+ C_ID					+ " INT PRIMARY KEY, "
+			+ C_TITLE				+ " TEXT NOT NULL, "
+			+ C_GLOBAL_ID			+ " INT NOT NULL, "
+			+ C_SHORT_DESCRIPTION	+ " TEXT NOT NULL, "
+			+ C_TEXT				+ " TEXT NOT NULL, "
+			+ C_PIC					+ " TEXT NOT NULL, "
+			+ C_SPIC				+ " TEXT NOT NULL, "
+			+ C_DATE				+ " TEXT NOT NULL"
+			+ ")";
+	private static final String CREATE_HEADLINE = "CREATE TABLE " + T_HEADLINE + CREATE_NEWS_COLUMNS;
+	private static final String CREATE_CAMPUS = "CREATE TABLE " + T_CAMPUS + CREATE_NEWS_COLUMNS;
+	private static final String CREATE_LECTURE = "CREATE TABLE " + T_LECTURE + CREATE_NEWS_COLUMNS;
+	private static final String CREATE_JOB = "CREATE TABLE " + T_JOB + CREATE_NEWS_COLUMNS;
+	private static final String CREATE_VISION = "CREATE TABLE " + T_VISION + CREATE_NEWS_COLUMNS;
 	
 	public NewsDBHelper(Context context) {
 		super(context, DBNAME, null, VERSION);
@@ -42,8 +55,12 @@ public class NewsDBHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+		db.execSQL(CREATE_HEADLINE);
+		db.execSQL(CREATE_CAMPUS);
+		db.execSQL(CREATE_LECTURE);
+		db.execSQL(CREATE_JOB);
+		db.execSQL(CREATE_VISION);
 		
-
 	}
 
 	@Override

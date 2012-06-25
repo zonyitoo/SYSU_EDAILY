@@ -3,16 +3,19 @@ package edu.edaily.sysuedaily;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
-import edu.edaily.sysuedaily.tabactivities.IrrigationActivity;
-import edu.edaily.sysuedaily.tabactivities.WeiboActivity;
-import edu.edaily.sysuedaily.tabactivities.TopicActivity;
 import edu.edaily.sysuedaily.tabactivities.HelpActivity;
+import edu.edaily.sysuedaily.tabactivities.IrrigationActivity;
 import edu.edaily.sysuedaily.tabactivities.NewsActivity;
+import edu.edaily.sysuedaily.tabactivities.TopicActivity;
+import edu.edaily.sysuedaily.tabactivities.WeiboActivity;
 
 public class MainActivity extends TabActivity {
 	
@@ -47,6 +50,26 @@ public class MainActivity extends TabActivity {
 			}
 			
 		});
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menuitem_activity_main_setting:
+			startActivity(new Intent(this, PrefsActivity.class));
+			break;
+		}
+		
+		return true;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.activity_main_menu, menu);
+		
+		return true;
 	}
 
 }

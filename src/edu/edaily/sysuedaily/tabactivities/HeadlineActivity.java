@@ -17,6 +17,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.BaseColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -107,6 +108,8 @@ public class HeadlineActivity extends Activity {
 				cursor.moveToPosition(arg2 - 1);
 				Intent intent = new Intent(HeadlineActivity.this, DetailActivity.class);
 				intent.putExtra(Constant.NEWS_KIND, "HEADLINE");
+				intent.putExtra(Constant.NEWS_TABLE, NewsDBHelper.T_HEADLINE);
+				intent.putExtra(Constant.NEWS_ID, cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID)));
 				intent.putExtra(Constant.NEWS_GID, cursor.getLong(cursor.getColumnIndexOrThrow(NewsDBHelper.C_GLOBAL_ID)));
 				intent.putExtra(Constant.NEWS_TITLE, cursor.getString(cursor.getColumnIndexOrThrow(NewsDBHelper.C_TITLE)));
 				intent.putExtra(Constant.NEWS_TEXT, cursor.getString(cursor.getColumnIndexOrThrow(NewsDBHelper.C_SHORT_DESCRIPTION)));
