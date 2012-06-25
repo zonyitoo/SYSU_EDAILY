@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@android:id/tabhost" >
+    
+	<TabWidget android:layout_width="match_parent"
+	    android:layout_height="30dp"
+	    android:id="@android:id/tabs"></TabWidget>
+	
+	<FrameLayout
+	    android:id="@android:id/tabcontent"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:paddingTop="30dp">
+	</FrameLayout>
+</TabHost>

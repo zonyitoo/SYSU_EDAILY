@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+	<ViewFlipper 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:autoStart="true"
+	    android:flipInterval="3000"
+	    android:id="@+id/viewflipper_headline_slide"
+	    android:inAnimation="@anim/slide_r2l"
+	    android:outAnimation="@anim/slide_l2r"
+	    android:animationCache="true">
+	    
+	    <ImageView android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:id="@+id/imageview_headline_slide_1"
+	        android:adjustViewBounds="true"
+	        android:fitsSystemWindows="true"/>
+	    
+	    <ImageView android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:id="@+id/imageview_headline_slide_2"
+	        android:adjustViewBounds="true"
+	        android:fitsSystemWindows="true"/>
+	    
+	    <ImageView android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:id="@+id/imageview_headline_slide_3"
+	        android:adjustViewBounds="true"
+	        android:fitsSystemWindows="true"/>
+	</ViewFlipper>
+</LinearLayout>

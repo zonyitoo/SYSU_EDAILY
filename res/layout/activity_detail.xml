@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:background="#115000">
+        
+        <Button android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BACK"
+            android:id="@+id/button_activity_detail_back"/>
+        
+        <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="KIND"
+            android:textColor="#000000"
+            android:textSize="20dp"
+            android:id="@+id/textview_activity_detail_kind"/>
+    </LinearLayout>
+
+    <ScrollView android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2.0">
+            
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+                
+            <TextView android:layout_width="match_parent"
+            	android:layout_height="wrap_content"
+            	android:id="@+id/textview_activity_detail_title"
+	            android:text="TITLE"
+	            android:textColor="#000000"
+	            android:textSize="20dp"
+	            android:paddingTop="5dp"
+	            android:gravity="center"/>
+	        <TextView android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:id="@+id/textview_activity_detail_datefrom"
+	            android:paddingTop="10dp"
+	            android:paddingBottom="10dp"
+	            android:text="2012-06-24 01:40:46   来源：央视"
+	            android:gravity="center"/>
+                
+            <ImageView android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageview_activity_detail_pic"/>
+            
+            <TextView android:layout_width="match_parent"
+            	android:layout_height="match_parent"
+            	android:id="@+id/textview_activity_detail_text"
+            	android:text="TEXT TEXT TEXT TEXT"
+            	android:textSize="15dp"
+            	android:textColor="#000000"/>
+        
+        </LinearLayout>
+    </ScrollView>
+		
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+            
+        <EditText android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:hint="ENTER COMMENT"
+            android:imeOptions="actionSend"
+            android:id="@+id/edittext_activity_detail_comment"/>            
+        <Button android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SEND"
+            android:layout_weight="3.0"/>
+        </LinearLayout>
+    
+</LinearLayout>
