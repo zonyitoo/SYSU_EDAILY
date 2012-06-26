@@ -9,8 +9,11 @@ package edu.edaily.sysuedaily;
 
 public final class R {
     public static final class anim {
-        public static final int slide_l2r=0x7f040000;
-        public static final int slide_r2l=0x7f040001;
+        public static final int dont_move=0x7f040000;
+        public static final int push_down=0x7f040001;
+        public static final int push_up=0x7f040002;
+        public static final int slide_l2r=0x7f040003;
+        public static final int slide_r2l=0x7f040004;
     }
     public static final class attr {
     }
@@ -115,6 +118,8 @@ public final class R {
     }
     public static final class style {
         public static final int ContentOverlay=0x7f090000;
+        public static final int DiscoverActivityAnim=0x7f090001;
+        public static final int DiscoverActivityTheme=0x7f090002;
     }
     public static final class xml {
         public static final int activity_prefs=0x7f050000;

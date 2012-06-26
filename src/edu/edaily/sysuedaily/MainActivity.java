@@ -46,7 +46,7 @@ public class MainActivity extends TabActivity {
 
 			public void onClick(View arg0) {
 				startActivity(new Intent(MainActivity.this, DiscoverActivity.class));
-				
+				overridePendingTransition(R.anim.push_up, R.anim.dont_move);
 			}
 			
 		});

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="DiscoverActivityAnim" parent="@android:style/Animation.Activity" mce_bogus="1">
+        <item name="android:activityOpenEnterAnimation">@anim/push_up</item>
+        <item name="android:activityOpenExitAnimation">@anim/dont_move</item>
+        <item name="android:activityCloseEnterAnimation">@anim/dont_move</item>
+        <item name="android:activityCloseExitAnimation">@anim/push_down</item>
+    </style>
+</resources>
