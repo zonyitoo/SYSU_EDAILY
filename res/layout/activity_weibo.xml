@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-	<ListView android:layout_width="match_parent"
+	<edu.edaily.sysuedaily.utils.PullToRefreshListView android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:id="@+id/listview_activity_weibo"></ListView>
+	    android:id="@+id/listview_activity_weibo"/>
 </LinearLayout>

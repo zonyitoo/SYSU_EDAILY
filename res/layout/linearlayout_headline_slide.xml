@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -7,8 +7,6 @@
 	<ViewFlipper 
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:autoStart="true"
-	    android:flipInterval="3000"
 	    android:id="@+id/viewflipper_headline_slide"
 	    android:inAnimation="@anim/slide_r2l"
 	    android:outAnimation="@anim/slide_l2r"
@@ -32,4 +30,17 @@
 	        android:adjustViewBounds="true"
 	        android:fitsSystemWindows="true"/>
 	</ViewFlipper>
-</LinearLayout>
+	
+	<RelativeLayout android:layout_width="match_parent"
+	    android:layout_height="170dp">
+	    <TextView android:layout_width="match_parent"
+	    	android:layout_height="wrap_content"
+	    	android:text="TEXTTEXT TEXT"
+	    	android:id="@+id/textview_headline_slide"
+	    	android:textSize="15dp"
+	    	android:background="#44ffffff"
+	    	android:layout_alignParentBottom="true"/>
+	    
+	</RelativeLayout>
+	
+</FrameLayout>

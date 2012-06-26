@@ -3,5 +3,9 @@
 
     <string name="hello">Hello World, LoadActivity!</string>
     <string name="app_name">SYSUeDaily</string>
+    <string name="pull_to_refresh_tap_label">PULL TO REFRESH</string>
+    <string name="pull_to_refresh_release_label">RELEASE</string>
+    <string name="pull_to_refresh_pull_label">REFRESH</string>
+    <string name="pull_to_refresh_refreshing_label">REFRESHING</string>
 
 </resources>

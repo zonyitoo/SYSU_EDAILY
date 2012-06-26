@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -17,16 +19,19 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.BaseColumns;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 import edu.edaily.sysuedaily.DetailActivity;
 import edu.edaily.sysuedaily.R;
@@ -39,9 +44,14 @@ public class HeadlineActivity extends Activity {
 	Cursor cursor;
 	
 	SQLiteDatabase newsdb;
-	LinearLayout header;
+	FrameLayout header;
 	ImageView iv1, iv2, iv3;
 	ViewFlipper vf;
+	TextView vfShow;
+	
+	int vfShowing = 0;
+	
+	Handler viewflippingHandler;
 	
 	private static final String[] FROM = {NewsDBHelper.C_TITLE, NewsDBHelper.C_SHORT_DESCRIPTION};
 	private static final int[] TO = {R.id.textview_activity_headline_list_content_title, R.id.textview_activity_headline_list_content_short};
@@ -64,6 +74,18 @@ public class HeadlineActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_headline);
+		
+		viewflippingHandler = new Handler() {
+
+			@Override
+			public void handleMessage(Message msg) {
+				super.handleMessage(msg);
+				
+				vf.showNext();
+				vfShow.setText((String) headcontent.get(vfShowing).get(NewsDBHelper.C_TITLE));
+			}
+			
+		};
 		
 		list = (ListView) findViewById(R.id.listview_activity_headline);
 		
@@ -94,7 +116,7 @@ public class HeadlineActivity extends Activity {
 			cursor.moveToNext();
 		}
 		
-		header = (LinearLayout) LayoutInflater.from(HeadlineActivity.this).inflate(R.layout.linearlayout_headline_slide, null);
+		header = (FrameLayout) LayoutInflater.from(HeadlineActivity.this).inflate(R.layout.linearlayout_headline_slide, null);
 		iv1 = (ImageView) header.findViewById(R.id.imageview_headline_slide_1);
 		new FetchPic(iv1).execute((Long) headcontent.get(0).get(NewsDBHelper.C_GLOBAL_ID));
 		iv2 = (ImageView) header.findViewById(R.id.imageview_headline_slide_2);
@@ -102,7 +124,20 @@ public class HeadlineActivity extends Activity {
 		iv3 = (ImageView) header.findViewById(R.id.imageview_headline_slide_3);
 		new FetchPic(iv3).execute((Long) headcontent.get(2).get(NewsDBHelper.C_GLOBAL_ID));
 		vf = (ViewFlipper) header.findViewById(R.id.viewflipper_headline_slide);
+		vfShow = (TextView) header.findViewById(R.id.textview_headline_slide);
+		vfShow.setText((String) headcontent.get(vfShowing).get(NewsDBHelper.C_TITLE));
 		
+		Timer timer = new Timer();
+		TimerTask task = new TimerTask() {
+
+			@Override
+			public void run() {
+				vfShowing = (vfShowing + 1) % 3;
+				viewflippingHandler.sendEmptyMessage(0);
+			}
+			
+		};
+		timer.scheduleAtFixedRate(task, 3000, 3000);
 		
 		list.addHeaderView(header);
 		list.setAdapter(new CursorAdapter(this, cursor));

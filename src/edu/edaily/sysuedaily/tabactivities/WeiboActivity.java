@@ -88,7 +88,7 @@ public class WeiboActivity extends Activity {
 			list.setAdapter(adapter);
 			
 		} catch (WeiboException e) {
-			// TODO Auto-generated catch block
+			prefs.edit().remove("access_token").commit();
 			e.printStackTrace();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -127,7 +127,7 @@ public class WeiboActivity extends Activity {
 				
 				refreshList();
 			} catch (WeiboException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
