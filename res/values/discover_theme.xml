@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="DiscoverActivityTheme" parent="@android:style/Theme.Light.NoTitleBar" mce_bogus="1">
-        <item name="android:windowAnimationStyle">@style/DiscoverActivityAnim</item>
-    </style>
-</resources>

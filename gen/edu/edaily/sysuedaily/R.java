@@ -44,14 +44,17 @@ public final class R {
         public static final int close_selector=0x7f020008;
         public static final int del_pic=0x7f020009;
         public static final int dialog_bg=0x7f02000a;
-        public static final int dota=0x7f02000b;
-        public static final int ic_launcher=0x7f02000c;
-        public static final int ic_pulltorefresh_arrow=0x7f02000d;
-        public static final int icon=0x7f02000e;
-        public static final int icon_delwords=0x7f02000f;
-        public static final int image_background=0x7f020010;
-        public static final int pull_to_refresh_header_background=0x7f020011;
-        public static final int title_logo=0x7f020012;
+        public static final int dot_focused=0x7f02000b;
+        public static final int dot_normal=0x7f02000c;
+        public static final int dota=0x7f02000d;
+        public static final int headline_pic_loading=0x7f02000e;
+        public static final int ic_launcher=0x7f02000f;
+        public static final int ic_pulltorefresh_arrow=0x7f020010;
+        public static final int icon=0x7f020011;
+        public static final int icon_delwords=0x7f020012;
+        public static final int image_background=0x7f020013;
+        public static final int pull_to_refresh_header_background=0x7f020014;
+        public static final int title_logo=0x7f020015;
     }
     public static final class id {
         public static final int btnClose=0x7f0b001a;
@@ -63,9 +66,6 @@ public final class R {
         public static final int flPic=0x7f0b0020;
         public static final int imageview_activity_detail_pic=0x7f0b0005;
         public static final int imageview_headline_list_content_spic=0x7f0b000d;
-        public static final int imageview_headline_slide_1=0x7f0b0011;
-        public static final int imageview_headline_slide_2=0x7f0b0012;
-        public static final int imageview_headline_slide_3=0x7f0b0013;
         public static final int ivDelPic=0x7f0b0022;
         public static final int ivImage=0x7f0b0021;
         public static final int linearlayout_activity_discover_content=0x7f0b0009;
@@ -88,9 +88,12 @@ public final class R {
         public static final int textview_activity_detail_title=0x7f0b0003;
         public static final int textview_activity_headline_list_content_short=0x7f0b000f;
         public static final int textview_activity_headline_list_content_title=0x7f0b000e;
-        public static final int textview_headline_slide=0x7f0b0014;
+        public static final int textview_headline_slide=0x7f0b0011;
         public static final int tv_text_limit=0x7f0b001f;
-        public static final int viewflipper_headline_slide=0x7f0b0010;
+        public static final int view_headline_slide_dot0=0x7f0b0012;
+        public static final int view_headline_slide_dot1=0x7f0b0013;
+        public static final int view_headline_slide_dot2=0x7f0b0014;
+        public static final int viewpager_headline_slide=0x7f0b0010;
     }
     public static final class layout {
         public static final int activity_campus=0x7f030000;
@@ -132,6 +135,7 @@ public final class R {
         public static final int ContentOverlay=0x7f090000;
         public static final int DiscoverActivityAnim=0x7f090001;
         public static final int DiscoverActivityTheme=0x7f090002;
+        public static final int dot_style=0x7f090003;
     }
     public static final class xml {
         public static final int activity_prefs=0x7f050000;

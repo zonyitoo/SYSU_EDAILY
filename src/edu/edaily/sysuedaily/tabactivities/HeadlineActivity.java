@@ -5,8 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -20,19 +21,25 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
+import android.os.Parcelable;
 import android.provider.BaseColumns;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.ViewFlipper;
 import edu.edaily.sysuedaily.DetailActivity;
 import edu.edaily.sysuedaily.R;
 import edu.edaily.sysuedaily.utils.Constant;
@@ -46,12 +53,27 @@ public class HeadlineActivity extends Activity {
 	SQLiteDatabase newsdb;
 	FrameLayout header;
 	ImageView iv1, iv2, iv3;
-	ViewFlipper vf;
-	TextView vfShow;
+	ViewPager pager;
+	TextView pageTitle;
 	
-	int vfShowing = 0;
+	int currentItem = 0;
 	
-	Handler viewflippingHandler;
+	private Handler handler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			pager.setCurrentItem(currentItem);// 切换当前显示的图片
+		};
+	};
+	
+	boolean[] picstat;
+	boolean[] spicstat;
+	
+	Bitmap[] headpic;
+	Bitmap[] spic;
+	
+	ArrayList<ImageView> headImgViews;
+	ArrayList<View> dots;
+	
+	private ScheduledExecutorService scheduledExecutorService;
 	
 	private static final String[] FROM = {NewsDBHelper.C_TITLE, NewsDBHelper.C_SHORT_DESCRIPTION};
 	private static final int[] TO = {R.id.textview_activity_headline_list_content_title, R.id.textview_activity_headline_list_content_short};
@@ -59,9 +81,9 @@ public class HeadlineActivity extends Activity {
 	ArrayList<HashMap<String, Object>> headcontent;
 	
 	String[] testArray = {"今日岭南学院教育改革会召开",
-			"2月29日系“女性表白日” 男性拒绝需付出代价",
+			"2月29日系“女性表白日” ",
 			"AV女优进课堂 合适否？",
-			"谷歌社交网站GOOGLE+难以提高用户活跃度",
+			"谷歌社交网站G+难以提高用户活跃度",
 			"珠海宝镜湾岩画中的巫舞"};
 	String[] textArray = {"        6月19日下午，岭南学院本科教育改革动员大会在岭南MBA中心大楼召开。" +
 			"我校校长许宁生、校长助理李文军，岭南学院院长徐信忠、书记张文彪，以及岭南学院全体教职员工、各项目主任、近40名学生代表参加了此次大会。" +
@@ -75,19 +97,28 @@ public class HeadlineActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_headline);
 		
-		viewflippingHandler = new Handler() {
-
-			@Override
-			public void handleMessage(Message msg) {
-				super.handleMessage(msg);
-				
-				vf.showNext();
-				vfShow.setText((String) headcontent.get(vfShowing).get(NewsDBHelper.C_TITLE));
-			}
-			
-		};
-		
+		// Init
+		header = (FrameLayout) LayoutInflater.from(HeadlineActivity.this).inflate(R.layout.linearlayout_headline_slide, null);
+		pageTitle = (TextView) header.findViewById(R.id.textview_headline_slide);
+		pager = (ViewPager) header.findViewById(R.id.viewpager_headline_slide);
 		list = (ListView) findViewById(R.id.listview_activity_headline);
+		
+		picstat = new boolean[3];
+		spicstat = new boolean[1000];
+		for (int i = 0; i < picstat.length; ++ i) picstat[i] = false;
+		for (int i = 0; i < spicstat.length; ++ i) spicstat[i] = false;
+		
+		headpic = new Bitmap[3];
+		for (int i = 0; i < headpic.length; ++ i) headpic[i] = null;
+		spic = new Bitmap[1000];
+		for (int i = 0; i < spic.length; ++ i) spic[i] = null;
+		
+		headImgViews = new ArrayList<ImageView>();
+		headcontent = new ArrayList<HashMap<String, Object>>();
+		dots = new ArrayList<View>();
+		dots.add(header.findViewById(R.id.view_headline_slide_dot0));
+		dots.add(header.findViewById(R.id.view_headline_slide_dot1));
+		dots.add(header.findViewById(R.id.view_headline_slide_dot2));
 		
 		newsdb = new NewsDBHelper(this).getWritableDatabase();
 		ContentValues values = new ContentValues();
@@ -103,10 +134,9 @@ public class HeadlineActivity extends Activity {
 		}
 		newsdb.close();
 		
+		// 构造三个头条 headcontent
 		newsdb = new NewsDBHelper(this).getReadableDatabase();
 		cursor = queryNews(newsdb);
-		
-		headcontent = new ArrayList<HashMap<String, Object>>();
 		cursor.moveToFirst();
 		for (int i = 0; i < 3; ++ i) {
 			HashMap<String, Object> head = new HashMap<String, Object>();
@@ -115,29 +145,39 @@ public class HeadlineActivity extends Activity {
 			headcontent.add(head);
 			cursor.moveToNext();
 		}
-		
-		header = (FrameLayout) LayoutInflater.from(HeadlineActivity.this).inflate(R.layout.linearlayout_headline_slide, null);
-		iv1 = (ImageView) header.findViewById(R.id.imageview_headline_slide_1);
-		new FetchPic(iv1).execute((Long) headcontent.get(0).get(NewsDBHelper.C_GLOBAL_ID));
-		iv2 = (ImageView) header.findViewById(R.id.imageview_headline_slide_2);
-		new FetchPic(iv2).execute((Long) headcontent.get(1).get(NewsDBHelper.C_GLOBAL_ID));
-		iv3 = (ImageView) header.findViewById(R.id.imageview_headline_slide_3);
-		new FetchPic(iv3).execute((Long) headcontent.get(2).get(NewsDBHelper.C_GLOBAL_ID));
-		vf = (ViewFlipper) header.findViewById(R.id.viewflipper_headline_slide);
-		vfShow = (TextView) header.findViewById(R.id.textview_headline_slide);
-		vfShow.setText((String) headcontent.get(vfShowing).get(NewsDBHelper.C_TITLE));
-		
-		Timer timer = new Timer();
-		TimerTask task = new TimerTask() {
+		OnClickListener clickImage = new OnClickListener() {
 
-			@Override
-			public void run() {
-				vfShowing = (vfShowing + 1) % 3;
-				viewflippingHandler.sendEmptyMessage(0);
+			public void onClick(View v) {
+				ImageView view = (ImageView) v;
+				int tag = (Integer) v.getTag();
+				cursor.moveToPosition(tag);
+				Intent intent = new Intent(HeadlineActivity.this, DetailActivity.class);
+				intent.putExtra(Constant.NEWS_KIND, "HEADLINE");
+				intent.putExtra(Constant.NEWS_TABLE, NewsDBHelper.T_HEADLINE);
+				intent.putExtra(Constant.NEWS_ID, cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID)));
+				intent.putExtra(Constant.NEWS_GID, cursor.getLong(cursor.getColumnIndexOrThrow(NewsDBHelper.C_GLOBAL_ID)));
+				intent.putExtra(Constant.NEWS_TITLE, cursor.getString(cursor.getColumnIndexOrThrow(NewsDBHelper.C_TITLE)));
+				startActivity(intent);
 			}
 			
 		};
-		timer.scheduleAtFixedRate(task, 3000, 3000);
+		// 初始化图片ImageView
+		for (int i = 0; i < headpic.length; i++) {
+			ImageView imageView = new ImageView(this);
+			imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+			imageView.setImageResource(R.drawable.headline_pic_loading);
+			imageView.setTag(i);
+			imageView.setOnClickListener(clickImage);
+			if (headpic[i] == null)
+				new FetchPic(imageView).execute((Long) headcontent.get(i).get(NewsDBHelper.C_GLOBAL_ID), (long) i);
+			imageView.setScaleType(ScaleType.CENTER_CROP);
+			headImgViews.add(imageView);
+		}
+		pageTitle.setText((String) headcontent.get(0).get(NewsDBHelper.C_TITLE));
+		pager.setAdapter(new PageAdapter());// 设置填充ViewPager页面的适配器
+		// 设置一个监听器，当ViewPager中的页面改变时调用
+		pager.setOnPageChangeListener(new MyPageChangeListener());
+		
 		
 		list.addHeaderView(header);
 		list.setAdapter(new CursorAdapter(this, cursor));
@@ -161,11 +201,106 @@ public class HeadlineActivity extends Activity {
 	}
 	
 	@Override
+	protected void onStart() {
+		scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+		// 当Activity显示出来后，每两秒钟切换一次图片显示
+		scheduledExecutorService.scheduleAtFixedRate(new ScrollTask(), 1, 5, TimeUnit.SECONDS);
+		super.onStart();
+	}
+
+	@Override
+	protected void onStop() {
+		// 当Activity不可见的时候停止切换
+		scheduledExecutorService.shutdown();
+		super.onStop();
+	}
+	
+	@Override
 	protected void onDestroy() {
 		newsdb.close();
 		super.onDestroy();
 	}
+	
+	private class ScrollTask implements Runnable {
 
+		public void run() {
+			synchronized (pager) {
+				System.out.println("currentItem: " + currentItem);
+				currentItem = (currentItem + 1) % headImgViews.size();
+				handler.obtainMessage().sendToTarget(); // 通过Handler切换图片
+			}
+		}
+
+	}
+	
+	private class MyPageChangeListener implements OnPageChangeListener {
+		private int oldPosition = 0;
+
+		/**
+		 * This method will be invoked when a new page becomes selected.
+		 * position: Position index of the new selected page.
+		 */
+		public void onPageSelected(int position) {
+			currentItem = position;
+			pageTitle.setText((String) headcontent.get(position).get(NewsDBHelper.C_TITLE));
+			dots.get(oldPosition).setBackgroundResource(R.drawable.dot_normal);
+			dots.get(position).setBackgroundResource(R.drawable.dot_focused);
+			oldPosition = position;
+		}
+
+		public void onPageScrollStateChanged(int arg0) {
+
+		}
+
+		public void onPageScrolled(int arg0, float arg1, int arg2) {
+
+		}
+	}
+	
+	private class PageAdapter extends PagerAdapter {
+
+		@Override
+		public int getCount() {
+			return headcontent.size();
+		}
+
+		@Override
+		public Object instantiateItem(View arg0, int arg1) {
+			((ViewPager) arg0).addView(headImgViews.get(arg1));
+			return headImgViews.get(arg1);
+		}
+
+		@Override
+		public void destroyItem(View arg0, int arg1, Object arg2) {
+			((ViewPager) arg0).removeView((View) arg2);
+		}
+
+		@Override
+		public boolean isViewFromObject(View arg0, Object arg1) {
+			return arg0 == arg1;
+		}
+
+		@Override
+		public void restoreState(Parcelable arg0, ClassLoader arg1) {
+
+		}
+
+		@Override
+		public Parcelable saveState() {
+			return null;
+		}
+
+		@Override
+		public void startUpdate(View arg0) {
+
+		}
+
+		@Override
+		public void finishUpdate(View arg0) {
+
+		}
+	}
+	
 	private Cursor queryNews(SQLiteDatabase db) {
 		return db.query(NewsDBHelper.T_HEADLINE, NewsDBHelper.C_COLUMNS, null, null, null, null, null);
 	}
@@ -188,40 +323,39 @@ public class HeadlineActivity extends Activity {
 	}
 	
 	class FetchPic extends AsyncTask<Long, Void, Bitmap> {
-		ImageView simage;
-		public FetchPic(ImageView v) {
-			simage = v;
+		
+		Long gid;
+		int listid;
+		ImageView view;
+		
+		public FetchPic(ImageView view) {
+			this.view = view;
 		}
 		
 		@Override
 		protected Bitmap doInBackground(Long... arg0) {
+			gid = arg0[0];
+			listid = arg0[1].intValue();
+			
 			Bitmap img = null;
 			if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-				String filepath = Constant.PATH_PIC + arg0[0];
+				final String filepath = Constant.PATH_PIC + arg0[0] + ".png";
 				
-				if (new File(filepath + ".lock").isFile())
+				if (picstat[listid])
 					this.cancel(true);
 				else {
-					File lockfile = new File(filepath + ".lock");
-					try {
-						lockfile.createNewFile();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					picstat[listid] = true;
 					
-					File p = new File(filepath + ".png");
+					File p = new File(filepath);
 					
 					if (p.isFile()) {
-						img = BitmapFactory.decodeFile(filepath + ".png");
+						img = BitmapFactory.decodeFile(filepath);
 					}
 					else {
 						if (!isCancelled()) {
 							
 						}
 					}
-					
-					lockfile.delete();
 				}
 			}
 			return img;
@@ -229,8 +363,8 @@ public class HeadlineActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Bitmap result) {
-			if (result != null)
-				simage.setImageBitmap(result);
+			headpic[listid] = result;
+			view.setImageBitmap(result);
 			super.onPostExecute(result);
 		}
 	}

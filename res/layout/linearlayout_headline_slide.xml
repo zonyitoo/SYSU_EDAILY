@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
     
+    <!--  
 	<ViewFlipper 
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
@@ -42,5 +43,47 @@
 	    	android:layout_alignParentBottom="true"/>
 	    
 	</RelativeLayout>
+	-->
 	
+	<android.support.v4.view.ViewPager
+        android:id="@+id/viewpager_headline_slide"
+        android:layout_width="match_parent"
+        android:layout_height="170dp" />
+	
+	<LinearLayout android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:layout_gravity="bottom"
+	    android:background="#66000000"
+	    android:gravity="center_vertical"
+	    android:paddingTop="3dp"
+	    android:paddingBottom="3dp">
+	    
+	    <TextView android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1.0"
+	        android:id="@+id/textview_headline_slide"
+	        android:textSize="15dp"/>
+	    
+	    <LinearLayout android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="4.0"
+	        android:orientation="horizontal"
+	        android:gravity="center">
+	        
+	        <View
+                android:id="@+id/view_headline_slide_dot0"
+                style="@style/dot_style"
+                android:background="@drawable/dot_focused" />
+	        <View
+                android:id="@+id/view_headline_slide_dot1"
+                style="@style/dot_style"
+                android:background="@drawable/dot_focused" />
+	        <View
+                android:id="@+id/view_headline_slide_dot2"
+                style="@style/dot_style"
+                android:background="@drawable/dot_focused" />
+	        
+	    </LinearLayout>
+	</LinearLayout>
 </FrameLayout>

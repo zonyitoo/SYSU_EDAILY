@@ -31,6 +31,8 @@ public class NewsActivity extends TabActivity {
 		host.addTab(vision);
 		more = host.newTabSpec("MORE").setIndicator("MORE").setContent(new Intent(this, MoreActivity.class));
 		host.addTab(more);
+		
+		
 	}
 	
 }
